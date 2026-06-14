@@ -1,0 +1,17 @@
+.terraform/
+*.tfstate
+*.tfstate.backup
+terraform.tfstate.d/
+crash.log
+*.tfplan
+*.zip
+.DS_Store
+terraform.tfstate.1775045850.backup
+.terraform.lock.hcl
+
+--------------------------
+*.log
+*.swp
+*.DS_Store
+.idea/
+.vscode/
