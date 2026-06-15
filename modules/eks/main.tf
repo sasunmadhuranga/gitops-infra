@@ -139,7 +139,7 @@ resource "aws_eks_node_group" "main" {
   }
 
   # Use AL2 (Amazon Linux 2) — the standard, well-tested EKS node AMI
-  ami_type       = "AL2_x86_64"
+  ami_type = "AL2023_x86_64_STANDARD"
   capacity_type  = "ON_DEMAND"
   disk_size      = 20   # GB — enough for system + a few container images
 
