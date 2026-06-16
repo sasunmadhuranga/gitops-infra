@@ -14,7 +14,7 @@ private_subnet_cidrs = ["10.0.11.0/24", "10.0.12.0/24"]
 # EKS
 eks_cluster_version = "1.33"
 node_instance_type  = "t3.small"   # t3.micro is too small for EKS system pods
-node_desired_count  = 2
+node_desired_count  = 3
 node_min_count      = 2
 node_max_count      = 3
 

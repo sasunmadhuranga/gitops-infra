@@ -5,10 +5,12 @@ variable "image_retention_count" { type = number }
 
 resource "aws_ecr_repository" "app" {
   name                 = "${var.project_name}-${var.environment}-${var.ecr_repo_name}"
-  image_tag_mutability = "MUTABLE"   # Allows overwriting tags like "latest"
+  image_tag_mutability = "MUTABLE"
+
+  force_delete = true
 
   image_scanning_configuration {
-    scan_on_push = true   # Free basic scanning — catches known CVEs on push
+    scan_on_push = true
   }
 
   tags = {

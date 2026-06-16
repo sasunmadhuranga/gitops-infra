@@ -21,19 +21,6 @@ Provisions the AWS infrastructure for the GitOps + ArgoCD on EKS project.
 | ECR repository | 1 | With image scan on push |
 | Security groups | 2 | Cluster + nodes |
 
-## Cost estimate (us-east-1, while running)
-
-| Item | $/hr |
-|---|---|
-| 2× t3.small nodes | ~$0.042 |
-| 2× NAT Gateways | ~$0.090 |
-| EKS control plane | ~$0.100 |
-| **Total** | **~$0.23/hr (~$5.50/day)** |
-
-> **Tip:** To save cost on a short demo, set `nat_gateway_count = 1` and point
-> both private route tables at the same NAT Gateway. Change `node_desired_count`
-> to 2 and `node_min_count` to 2 — you need at least 2 nodes for system pods +
-> your app to schedule without resource pressure on t3.small.
 
 ## Prerequisites
 
@@ -171,3 +158,25 @@ gitops-infra/
     ├── iam/             # Cluster role, node role
     └── eks/             # EKS cluster, node group, OIDC provider, SGs
 ```
+
+---
+## 📸 Screenshots
+<p align="center">
+    <img src="screenshots/1.png" width="600"/>
+    <img src="screenshots/2.png" width="600"/>
+    <img src="screenshots/3.png" width="600"/>
+    <img src="screenshots/4.png" width="600"/>
+    <img src="screenshots/5.png" width="600"/>
+    <img src="screenshots/6.png" width="600"/>
+    <img src="screenshots/7.png" width="600"/>
+    <img src="screenshots/8.png" width="600"/>
+    <img src="screenshots/9.png" width="600"/>
+    <img src="screenshots/10.png" width="600"/>
+</p>
+
+---
+
+## Author
+Sasun Madhuranga
+
+GitHub: https://github.com/sasunmadhuranga
