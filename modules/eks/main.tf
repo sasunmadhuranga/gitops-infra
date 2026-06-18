@@ -91,7 +91,7 @@ resource "aws_eks_cluster" "main" {
     subnet_ids              = var.private_subnet_ids
     security_group_ids      = [aws_security_group.cluster.id]
     endpoint_private_access = true
-    endpoint_public_access  = true   # Allows kubectl from your local machine
+    endpoint_public_access  = true   
   }
 
   enabled_cluster_log_types = ["api", "audit", "authenticator"]
@@ -119,12 +119,12 @@ resource "aws_eks_node_group" "main" {
   }
 
   update_config {
-    max_unavailable = 1   # Rolling update: replaces one node at a time
+    max_unavailable = 1   
   }
 
   ami_type = "AL2023_x86_64_STANDARD"
   capacity_type  = "ON_DEMAND"
-  disk_size      = 20   # GB — enough for system + a few container images
+  disk_size      = 20   
 
   labels = {
     environment = var.environment

@@ -1,7 +1,7 @@
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
-  enable_dns_hostnames = true   # Required for EKS nodes to resolve the API endpoint
+  enable_dns_hostnames = true   
 
   tags = {
     Name = "${var.project_name}-${var.environment}-vpc"
@@ -26,7 +26,7 @@ resource "aws_subnet" "public" {
 
   tags = {
     Name                     = "${var.project_name}-${var.environment}-public-${var.availability_zones[count.index]}"
-    "kubernetes.io/role/elb" = "1"   # Marks subnet for public-facing ALBs
+    "kubernetes.io/role/elb" = "1"   
     "kubernetes.io/cluster/${var.project_name}-${var.environment}-cluster" = "shared"
   }
 }
@@ -40,7 +40,7 @@ resource "aws_subnet" "private" {
 
   tags = {
     Name                              = "${var.project_name}-${var.environment}-private-${var.availability_zones[count.index]}"
-    "kubernetes.io/role/internal-elb" = "1"   # Marks subnet for internal ALBs
+    "kubernetes.io/role/internal-elb" = "1"  
     "kubernetes.io/cluster/${var.project_name}-${var.environment}-cluster" = "shared"
   }
 }
