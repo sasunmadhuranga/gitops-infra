@@ -12,9 +12,6 @@ data "aws_iam_policy_document" "eks_cluster_assume" {
   }
 }
 
-# ─── EKS Cluster Role ─────────────────────────────────────────────────────────
-# The EKS control plane uses this role to manage AWS resources on your behalf.
-
 resource "aws_iam_role" "cluster" {
   name               = "${var.project_name}-${var.environment}-eks-cluster-role"
   assume_role_policy = data.aws_iam_policy_document.eks_cluster_assume.json
@@ -25,9 +22,6 @@ resource "aws_iam_role_policy_attachment" "cluster_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-# ─── EKS Node Role ────────────────────────────────────────────────────────────
-# Worker nodes use this role to pull images from ECR, register with the cluster,
-# and read CNI networking config from the VPC.
 
 data "aws_iam_policy_document" "node_assume" {
   statement {
@@ -58,8 +52,6 @@ resource "aws_iam_role_policy_attachment" "node_ecr_policy" {
   role       = aws_iam_role.node.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
-
-# ─── Outputs ──────────────────────────────────────────────────────────────────
 
 output "cluster_role_arn" { value = aws_iam_role.cluster.arn }
 output "node_role_arn"    { value = aws_iam_role.node.arn }

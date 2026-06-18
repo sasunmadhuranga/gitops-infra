@@ -18,7 +18,6 @@ resource "aws_ecr_repository" "app" {
   }
 }
 
-# Lifecycle policy: keep only the N most recent images to avoid storage costs
 resource "aws_ecr_lifecycle_policy" "app" {
   repository = aws_ecr_repository.app.name
 

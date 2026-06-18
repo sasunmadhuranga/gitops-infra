@@ -46,8 +46,6 @@ variable "eks_cluster_version" {
   default     = "1.33"
 }
 
-# t3.small is the minimum recommended for EKS worker nodes.
-# t3.micro will struggle to run system pods + your app simultaneously.
 variable "node_instance_type" {
   description = "EC2 instance type for EKS worker nodes"
   type        = string

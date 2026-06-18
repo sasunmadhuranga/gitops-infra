@@ -16,9 +16,6 @@ data "tls_certificate" "eks_oidc" {
   url = aws_eks_cluster.main.identity[0].oidc[0].issuer
 }
 
-# ─── Control Plane Security Group ─────────────────────────────────────────────
-# Controls which traffic can reach the EKS API server.
-
 resource "aws_security_group" "cluster" {
   name        = "${var.cluster_name}-cluster-sg"
   description = "EKS cluster control plane security group"
@@ -35,7 +32,6 @@ resource "aws_security_group" "cluster" {
   tags = { Name = "${var.cluster_name}-cluster-sg" }
 }
 
-# Allow nodes to talk to the control plane
 resource "aws_security_group_rule" "cluster_ingress_nodes" {
   type                     = "ingress"
   from_port                = 443
@@ -45,8 +41,6 @@ resource "aws_security_group_rule" "cluster_ingress_nodes" {
   source_security_group_id = aws_security_group.nodes.id
   description              = "Allow worker nodes to reach API server"
 }
-
-# ─── Node Security Group ──────────────────────────────────────────────────────
 
 resource "aws_security_group" "nodes" {
   name        = "${var.cluster_name}-node-sg"
@@ -88,8 +82,6 @@ resource "aws_security_group" "nodes" {
   tags = { Name = "${var.cluster_name}-node-sg" }
 }
 
-# ─── EKS Cluster ──────────────────────────────────────────────────────────────
-
 resource "aws_eks_cluster" "main" {
   name     = var.cluster_name
   version  = var.cluster_version
@@ -102,24 +94,16 @@ resource "aws_eks_cluster" "main" {
     endpoint_public_access  = true   # Allows kubectl from your local machine
   }
 
-  # Enable useful control-plane log groups in CloudWatch
   enabled_cluster_log_types = ["api", "audit", "authenticator"]
 
   depends_on = [aws_security_group.cluster]
 }
-
-# ─── OIDC Identity Provider ───────────────────────────────────────────────────
-# Enables IAM Roles for Service Accounts (IRSA). Required for the AWS Load
-# Balancer Controller (and ArgoCD Image Updater) to call AWS APIs securely.
 
 resource "aws_iam_openid_connect_provider" "eks" {
   client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = [data.tls_certificate.eks_oidc.certificates[0].sha1_fingerprint]
   url             = aws_eks_cluster.main.identity[0].oidc[0].issuer
 }
-
-# ─── Managed Node Group ───────────────────────────────────────────────────────
-# Nodes are spread across private subnets in both AZs automatically.
 
 resource "aws_eks_node_group" "main" {
   cluster_name    = aws_eks_cluster.main.name
@@ -138,7 +122,6 @@ resource "aws_eks_node_group" "main" {
     max_unavailable = 1   # Rolling update: replaces one node at a time
   }
 
-  # Use AL2 (Amazon Linux 2) — the standard, well-tested EKS node AMI
   ami_type = "AL2023_x86_64_STANDARD"
   capacity_type  = "ON_DEMAND"
   disk_size      = 20   # GB — enough for system + a few container images
@@ -150,8 +133,6 @@ resource "aws_eks_node_group" "main" {
 
   depends_on = [aws_eks_cluster.main]
 }
-
-# ─── Outputs ──────────────────────────────────────────────────────────────────
 
 output "cluster_name"        { value = aws_eks_cluster.main.name }
 output "cluster_endpoint"    { value = aws_eks_cluster.main.endpoint }

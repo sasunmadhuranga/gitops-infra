@@ -1,4 +1,3 @@
-# ── Terraform State Backend ───────────────────────────────────────────────────
 # By default Terraform stores state locally (terraform.tfstate).
 # For a real project, store it remotely in S3 so you don't lose it.
 #

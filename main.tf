@@ -33,8 +33,6 @@ provider "aws" {
   }
 }
 
-# The kubernetes and helm providers need the EKS cluster to exist first.
-# They are configured after the EKS module creates the cluster.
 provider "kubernetes" {
   host                   = module.eks.cluster_endpoint
   cluster_ca_certificate = base64decode(module.eks.cluster_ca_certificate)
@@ -52,8 +50,6 @@ provider "helm" {
 data "aws_eks_cluster_auth" "cluster" {
   name = module.eks.cluster_name
 }
-
-# ─── Modules ─────────────────────────────────────────────────────────────────
 
 module "vpc" {
   source = "./modules/vpc"

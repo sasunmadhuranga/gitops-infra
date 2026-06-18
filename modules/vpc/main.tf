@@ -1,5 +1,3 @@
-# ─── VPC ─────────────────────────────────────────────────────────────────────
-
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
@@ -10,8 +8,6 @@ resource "aws_vpc" "main" {
   }
 }
 
-# ─── Internet Gateway ─────────────────────────────────────────────────────────
-
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
@@ -19,11 +15,6 @@ resource "aws_internet_gateway" "main" {
     Name = "${var.project_name}-${var.environment}-igw"
   }
 }
-
-# ─── Public Subnets ───────────────────────────────────────────────────────────
-# The ALB and NAT Gateways live here. One subnet per AZ.
-# The kubernetes.io/role tags are required for the AWS Load Balancer Controller
-# to discover subnets and provision ALBs automatically.
 
 resource "aws_subnet" "public" {
   count = length(var.availability_zones)
@@ -40,9 +31,6 @@ resource "aws_subnet" "public" {
   }
 }
 
-# ─── Private Subnets ──────────────────────────────────────────────────────────
-# EKS worker nodes run here. They reach the internet via NAT Gateway.
-
 resource "aws_subnet" "private" {
   count = length(var.availability_zones)
 
@@ -56,12 +44,6 @@ resource "aws_subnet" "private" {
     "kubernetes.io/cluster/${var.project_name}-${var.environment}-cluster" = "shared"
   }
 }
-
-# ─── NAT Gateways ─────────────────────────────────────────────────────────────
-# One NAT Gateway per AZ for high availability. Worker nodes in private subnets
-# use NAT to reach ECR, the EKS API, and other AWS services.
-# NOTE: Each NAT Gateway costs ~$0.045/hr. For a short demo you can use a
-# single NAT Gateway by setting count = 1 and referencing aws_subnet.public[0].
 
 resource "aws_eip" "nat" {
   count  = length(var.availability_zones)
@@ -87,9 +69,6 @@ resource "aws_nat_gateway" "main" {
   depends_on = [aws_internet_gateway.main]
 }
 
-# ─── Route Tables ─────────────────────────────────────────────────────────────
-
-# Public route table: all traffic → IGW
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
@@ -109,7 +88,6 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-# Private route tables: one per AZ, each pointing to its own NAT Gateway
 resource "aws_route_table" "private" {
   count  = length(var.availability_zones)
   vpc_id = aws_vpc.main.id
