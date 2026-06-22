@@ -13,7 +13,7 @@ Provisions the AWS infrastructure for the GitOps + ArgoCD on EKS project.
 | NAT Gateways | 2 | One per AZ for HA egress |
 | Elastic IPs | 2 | For NAT Gateways |
 | Route tables | 3 | 1 public + 2 private |
-| EKS cluster | 1 | v1.29, private+public endpoint |
+| EKS cluster | 1 | v1.33, private+public endpoint |
 | Managed node group | 1 | 2× t3.small across 2 AZs |
 | OIDC provider | 1 | Enables IRSA for ALB controller |
 | IAM cluster role | 1 | For EKS control plane |
@@ -47,7 +47,7 @@ terraform init
 # 3. Preview the plan — review before applying
 terraform plan
 
-# 4. Apply (takes ~15 minutes — EKS cluster creation is the slow step)
+# 4. Apply (takes ~15 minutes)
 terraform apply
 
 # 5. Configure kubectl
@@ -151,7 +151,7 @@ gitops-infra/
 ├── variables.tf         # All input variables with defaults
 ├── outputs.tf           # Useful values after apply
 ├── terraform.tfvars     # Your environment values (edit this)
-├── backend.tf           # S3 remote state config (optional, commented out)
+├── backend.tf           # S3 remote state config (optional)
 └── modules/
     ├── vpc/             # VPC, subnets, IGW, NAT, route tables
     ├── ecr/             # ECR repository + lifecycle policy
