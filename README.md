@@ -2,6 +2,11 @@
 
 Provisions the AWS infrastructure for the GitOps + ArgoCD on EKS project.
 
+## Architecture
+
+<img src="screenshots/diagram.png" width="600" align="center"/>
+
+
 ## What gets created
 
 | Resource | Count | Notes |
@@ -174,6 +179,19 @@ gitops-infra/
     <img src="screenshots/10.png" width="600"/>
 </p>
 
+---
+
+---
+### Other related repositories
+<p align="center">
+  <a href="https://github.com/sasunmadhuranga/gitops-manifests">
+    GitOps Manifests
+  </a>
+  <br />
+  <a href="https://github.com/sasunmadhuranga/python-backend-app">
+    Python Backend App
+  </a>
+</p>
 ---
 
 ## Author
